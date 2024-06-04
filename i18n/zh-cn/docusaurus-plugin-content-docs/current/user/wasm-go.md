@@ -521,6 +521,18 @@ func onHttpRequestHeaders(ctx wrapper.HttpContext, config MyConfig, log wrapper.
 ```
 
 ### 在插件中调用Redis
+使用如下配置文件:
+```yaml
+password: "xxxxxxx"
+serviceName: "redis.static"
+qpm: 10
+```
+or
+```yaml
+password: "xxxxxxx"
+serviceName: "redis.dns"
+qpm: 10
+```
 
 使用如下示例代码实现Redis限流插件
 
@@ -575,7 +587,7 @@ func parseConfig(json gjson.Result, config *RedisCallConfig, log wrapper.Log) er
 	qpm := json.Get("qpm").Int()
 	config.qpm = int(qpm)
 	config.client = wrapper.NewRedisClusterClient(wrapper.FQDNCluster{
-		ServiceName: serviceName,
+		FQDN: serviceName,
 		Port: servicePort,
 	})
 	return config.client.Init(username, password, timeout)
